@@ -34,16 +34,15 @@ requirements:
     - typing_extensions >=4.1.1
     - lazy_loader >=0.1
     - msgpack-python >=1.0
+    # matplotlib powers librosa.display; optional upstream ("display" extra) but kept
+    # in run so the commonly-used librosa.display module works on install (matches conda-forge).
+    - matplotlib-base >=3.5.0
     - standard-aifc  # [py>=313]
     - standard-sunau  # [py>=313]
-  run_constrained:
-    # matplotlib powers librosa.display; optional upstream (the "display" extra).
-    - matplotlib-base >=3.5.0
 
 test:
   requires:
     - pip
-    - matplotlib-base >=3.5.0
   imports:
     - librosa
     - librosa.core
