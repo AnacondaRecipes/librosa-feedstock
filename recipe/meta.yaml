@@ -1,4 +1,4 @@
-{% set version = "0.11.0" %}
+{% set version = "1.0.0" %}
 
 package:
   name: librosa
@@ -7,7 +7,7 @@ package:
 source:
   fn: librosa-{{ version }}.tar.gz
   url: https://pypi.org/packages/source/l/librosa/librosa-{{ version }}.tar.gz
-  sha256: f5ed951ca189b375bbe2e33b2abd7e040ceeee302b9bbaeeffdfddb8d0ace908
+  sha256: 73ed480d4022e436e85dfa6f6b06ff38a259b9210039ac99939cd64854b61a57
 
 build:
   number: 0
