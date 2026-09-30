@@ -40,8 +40,11 @@ requirements:
     - matplotlib-base >=3.10.0
 
 test:
+  source_files:
+    - tests
   requires:
     - pip
+    - pytest
   imports:
     - librosa
     - librosa.core
@@ -51,6 +54,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -vv tests
 
 about:
   home: https://github.com/librosa/librosa
