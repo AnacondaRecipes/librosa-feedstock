@@ -41,15 +41,15 @@ requirements:
 test:
   source_files:
     - tests
-  requires:
-    - pip
-    - pytest
   imports:
     - librosa
     - librosa.core
     - librosa.feature
     - librosa.util
     - librosa.display
+  requires:
+    - pip
+    - pytest
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
