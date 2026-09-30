@@ -38,6 +38,16 @@ requirements:
     # in run so the commonly-used librosa.display module works on install (matches conda-forge).
     - matplotlib-base >=3.10.0
 
+{% set skip_tests = "" %}
+# missing resampy and samplerate for tests
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_mono" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_stereo" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_scale" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_multichannel" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim_axis" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_nnls_multi" %}
+
 test:
   source_files:
     - tests
@@ -53,7 +63,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -vv tests
+    - pytest -vv {{ skip_tests }} tests
 
 about:
   home: https://github.com/librosa/librosa
