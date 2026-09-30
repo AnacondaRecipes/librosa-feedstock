@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/librosa/librosa/archive/refs/tags/{{ version }}.tar.gz
+  url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
   sha256: 02b620aaf0a6b020f20f2d1ce635a3b8b8c2563a7b8e4ba3b7e2ca6e6247e680
 
 build:
