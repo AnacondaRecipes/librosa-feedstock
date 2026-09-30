@@ -1,16 +1,17 @@
-{% set version = "0.11.0" %}
+{% set name = "librosa" %}
+{% set version = "1.0.0" %}
 
 package:
-  name: librosa
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  fn: librosa-{{ version }}.tar.gz
-  url: https://pypi.org/packages/source/l/librosa/librosa-{{ version }}.tar.gz
-  sha256: f5ed951ca189b375bbe2e33b2abd7e040ceeee302b9bbaeeffdfddb8d0ace908
+  url: https://github.com/{{ name }}/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
+  sha256: 02b620aaf0a6b020f20f2d1ce635a3b8b8c2563a7b8e4ba3b7e2ca6e6247e680
 
 build:
   number: 0
+  skip: true  # [py<312]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -21,36 +22,51 @@ requirements:
     - wheel >=0.29.0
   run:
     - python
-    - audioread >=2.1.9
-    - numba >=0.51.0
-    - numpy >=1.22.3
-    - scipy >=1.6.0
-    - scikit-learn >=1.1.0
-    - joblib >=1.0
-    - decorator >=4.3.0
+    - numba >=0.61.0
+    - numpy >=2.1.0
+    - scipy >=1.15.0
+    - scikit-learn >=1.6.0
+    - joblib >=1.2
+    - decorator >=5.2.1
     - pysoundfile >=0.12.1
-    - pooch >=1.1
-    - soxr-python >=0.3.2
+    - pooch >=1.7
+    - soxr-python >=1.0.0
     - typing_extensions >=4.1.1
-    - lazy_loader >=0.1
-    - msgpack-python >=1.0
+    - lazy_loader >=0.3
+    - msgpack-python >=1.0.5
     # matplotlib powers librosa.display; optional upstream ("display" extra) but kept
     # in run so the commonly-used librosa.display module works on install (matches conda-forge).
-    - matplotlib-base >=3.5.0
-    - standard-aifc  # [py>=313]
-    - standard-sunau  # [py>=313]
+    - matplotlib-base >=3.10.0
+
+{% set skip_tests = "" %}
+# missing resampy and samplerate for tests
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_mono" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_stereo" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_scale" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_multichannel" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim_axis" %}
+{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_nnls_multi" %}
+
+# these are flaky on windows CI: E  _tkinter.TclError: Cannot find a usable init.tcl in the following directories...
+{% set skip_tests = skip_tests + " --ignore=tests/test_display.py" %}  # [win]
 
 test:
-  requires:
-    - pip
+  source_files:
+    - tests
   imports:
     - librosa
     - librosa.core
     - librosa.feature
     - librosa.util
     - librosa.display
+  requires:
+    - pip
+    - pytest
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -vv {{ skip_tests }} tests
 
 about:
   home: https://github.com/librosa/librosa
