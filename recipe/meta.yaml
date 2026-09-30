@@ -48,6 +48,13 @@ requirements:
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim_axis" %}
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_nnls_multi" %}
 
+# flaky on windows CI
+# _tkinter.TclError: Cannot find a usable init.tcl in the following directories: 
+{% set skip_tests = skip_tests + " --deselect=tests/test_display.py::test_sharex_waveplot_ms" %}  # [win]
+{% set skip_tests = skip_tests + " --deselect=tests/test_display.py::test_coords" %}              # [win]
+{% set skip_tests = skip_tests + " --deselect=tests/test_display.py::test_highlight_spectrum" %}  # [win]
+{% set skip_tests = skip_tests + " --deselect=tests/test_display.py::test_cqt_note" %}            # [win]
+
 test:
   source_files:
     - tests
