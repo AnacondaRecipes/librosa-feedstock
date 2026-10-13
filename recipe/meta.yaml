@@ -46,6 +46,9 @@ requirements:
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_multichannel" %}
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim" %}
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim_axis" %}
+
+# test is numerically fragile (librosa upstream); test result will pass/fail due to noisy initialization float
+# rounding from BLAS/LAPACK build (result is deterministic per build). E  AssertionError: np.float64(290.69...
 {% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_nnls_multi" %}
 
 # these are flaky on windows CI: E  _tkinter.TclError: Cannot find a usable init.tcl in the following directories...
