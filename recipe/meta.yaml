@@ -43,9 +43,8 @@ requirements:
 {% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_mono" %}
 {% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_stereo" %}
 {% set skip_tests = skip_tests + " --deselect=tests/test_core.py::test_resample_scale" %}
-{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_multichannel" %}
-{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim" %}
-{% set skip_tests = skip_tests + " --deselect=tests/test_multichannel.py::test_resample_highdim_axis" %}
+# for parametrized tests, only skip the variants with missing dependencies
+{% set skip_parametrized = "not (test_resample and (sinc or kaiser))" %}
 
 # test is numerically fragile (librosa upstream); test result will pass/fail due to noisy initialization float
 # rounding from BLAS/LAPACK build (result is deterministic per build). E  AssertionError: np.float64(290.69...
@@ -69,7 +68,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -vv {{ skip_tests }} tests
+    - pytest -vv {{ skip_tests }} -k "{{ skip_parametrized }}" tests
 
 about:
   home: https://github.com/librosa/librosa
